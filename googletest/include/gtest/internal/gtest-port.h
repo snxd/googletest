@@ -2122,9 +2122,8 @@ inline const char* StrError(int errnum) { return strerror(errnum); }
 #endif  // !GTEST_OS_WINDOWS_MOBILE && !GTEST_OS_QURT
 
 inline const char* GetEnv(const char* name) {
-#if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_WINDOWS_PHONE ||          \
-    GTEST_OS_WINDOWS_RT || GTEST_OS_ESP8266 || GTEST_OS_XTENSA || \
-    GTEST_OS_QURT
+#if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_WINDOWS_PHONE || GTEST_OS_ESP8266 || \
+    GTEST_OS_XTENSA || GTEST_OS_QURT
   // We are on an embedded platform, which has no environment variables.
   static_cast<void>(name);  // To prevent 'unused argument' warning.
   return nullptr;
