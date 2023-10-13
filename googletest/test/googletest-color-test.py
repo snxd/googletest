@@ -93,6 +93,7 @@ class GTestColorTest(gtest_test_utils.TestCase):
     self.assertTrue(UsesColor('xterm', None, 'auto'))
     self.assertTrue(UsesColor('dumb', None, 'yes'))
     self.assertTrue(UsesColor('xterm', None, 'yes'))
+    self.assertTrue(UsesColor('xterm', None, 'ansi'))
 
   def testEnvVarOnly(self):
     """Tests the case when there's GTEST_COLOR but not --gtest_color."""
@@ -104,6 +105,7 @@ class GTestColorTest(gtest_test_utils.TestCase):
     self.assertTrue(UsesColor('xterm-color', 'auto', None))
     self.assertTrue(UsesColor('dumb', 'yes', None))
     self.assertTrue(UsesColor('xterm-color', 'yes', None))
+    self.assertTrue(UsesColor('xterm-color', 'ansi', None))
 
   def testEnvVarAndFlag(self):
     """Tests the case when there are both GTEST_COLOR and --gtest_color."""
@@ -111,6 +113,7 @@ class GTestColorTest(gtest_test_utils.TestCase):
     self.assertTrue(not UsesColor('xterm-color', 'no', 'no'))
     self.assertTrue(UsesColor('dumb', 'no', 'yes'))
     self.assertTrue(UsesColor('xterm-color', 'no', 'auto'))
+    self.assertTrue(UsesColor('xterm-color', 'no', 'ansi'))
 
   def testAliasesOfYesAndNo(self):
     """Tests using aliases in specifying --gtest_color."""
