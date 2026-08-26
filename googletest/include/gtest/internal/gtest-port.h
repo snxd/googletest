@@ -421,6 +421,7 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 #define GTEST_HAS_POSIX_RE (__ANDROID_API__ >= 9)
 #else
 #if !(defined(GTEST_OS_WINDOWS) || defined(GTEST_OS_XTENSA) || \
+      defined(GTEST_OS_SCE) || \
       defined(GTEST_OS_QURT))
 #define GTEST_HAS_POSIX_RE 1
 #else
@@ -645,6 +646,7 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 #if defined(GTEST_OS_WINDOWS_MOBILE) || defined(GTEST_OS_WINDOWS_PHONE) || \
     defined(GTEST_OS_WINDOWS_RT) || defined(GTEST_OS_WINDOWS_GAMES) ||     \
     defined(GTEST_OS_ESP8266) || defined(GTEST_OS_XTENSA) ||               \
+    defined(GTEST_OS_SCE) || \
     defined(GTEST_OS_QURT) || !GTEST_HAS_FILE_SYSTEM
 #define GTEST_HAS_STREAM_REDIRECTION 0
 #else
@@ -2057,7 +2059,11 @@ inline int StrCaseCmp(const char* s1, const char* s2) {
 
 #else
 
+#if defined(GTEST_OS_SCE)
+inline int DoIsATTY(int /* fd */) { return 0; }
+#else
 inline int DoIsATTY(int fd) { return isatty(fd); }
+#endif
 inline int StrCaseCmp(const char* s1, const char* s2) {
   return strcasecmp(s1, s2);
 }
@@ -2086,6 +2092,7 @@ GTEST_DISABLE_MSC_DEPRECATED_PUSH_()
 #if !defined(GTEST_OS_WINDOWS_MOBILE) && !defined(GTEST_OS_WINDOWS_PHONE) && \
     !defined(GTEST_OS_WINDOWS_RT) && !defined(GTEST_OS_WINDOWS_GAMES) &&     \
     !defined(GTEST_OS_ESP8266) && !defined(GTEST_OS_XTENSA) &&               \
+    !defined(GTEST_OS_SCE) && \
     !defined(GTEST_OS_QURT)
 inline int ChDir(const char* dir) { return chdir(dir); }
 #endif
@@ -2125,6 +2132,7 @@ inline const char* StrError(int errnum) { return strerror(errnum); }
 inline const char* GetEnv(const char* name) {
 #if defined(GTEST_OS_WINDOWS_MOBILE) || defined(GTEST_OS_WINDOWS_PHONE) || \
     defined(GTEST_OS_ESP8266) || defined(GTEST_OS_XTENSA) ||               \
+    defined(GTEST_OS_SCE) || \
     defined(GTEST_OS_QURT)
   // We are on an embedded platform, which has no environment variables.
   static_cast<void>(name);  // To prevent 'unused argument' warning.
