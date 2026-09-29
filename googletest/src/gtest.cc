@@ -93,6 +93,10 @@
 #include <windows.h>  // NOLINT
 #undef min
 
+#elif defined(GTEST_OS_SCE)
+
+#include <app_content.h>  // NOLINT
+
 #elif defined(GTEST_OS_WINDOWS)  // We are on Windows proper.
 
 #include <windows.h>  // NOLINT
@@ -7067,6 +7071,14 @@ std::string TempDir() {
   return GetDirFromEnv({"TEST_TMPDIR", "TEMP"}, "\\temp\\", '\\');
 #elif defined(GTEST_OS_LINUX_ANDROID)
   return GetDirFromEnv({"TEST_TMPDIR", "TMPDIR"}, "/data/local/tmp/", '/');
+#elif defined(GTEST_OS_SCE)
+  // Temporary Data Area is not mounted automatically. If the temp directory is
+  // requested, we must mount Temporary Data Area first.
+  SceAppContentMountPoint mount_point{};
+  const auto rc = sceAppContentTemporaryDataMount2(
+      SCE_APP_CONTENT_TEMPORARY_DATA_OPTION_NONE, &mount_point);
+  if (rc == 0 || rc == SCE_APP_CONTENT_ERROR_BUSY) return "/temp0/";
+  return {};
 #else
   return GetDirFromEnv({"TEST_TMPDIR", "TMPDIR"}, "/tmp/", '/');
 #endif
